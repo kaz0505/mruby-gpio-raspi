@@ -3,25 +3,27 @@
 #include "mruby.h"
 #include "mruby/value.h"
 #include "./set_rpin.h"
+//register
+#include <stdlib.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
+#include "./register.h"
 
 static mrb_value
 f_gpio_pinmode(mrb_state *mrb, mrb_value self)
 {
+  gpio_init();
+  if (Gpio) return;
   char buf[100];
   mrb_int pin, dir;
   mrb_get_args(mrb, "ii", &pin, &dir);
   pin=set_rpin(pin);
   
   if( dir == 1 ){  // output
-    sprintf(buf, "echo %d > /sys/class/gpio/export", pin);
-    system(buf);
-    sprintf(buf, "echo out > /sys/class/gpio/gpio%d/direction", pin);
-    system(buf);
+    gpio_configure (pin, "OUTPUT");
   } else {         // input
-    sprintf(buf, "echo %d > /sys/class/gpio/export", pin);
-    system(buf);
-    sprintf(buf, "echo in > /sys/class/gpio/gpio%d/direction", pin);
-    system(buf);
+    gpio_configure (pin, "INPUT");
   }
 
   return mrb_nil_value();
@@ -34,10 +36,13 @@ f_gpio_dwrite(mrb_state *mrb, mrb_value self)
   mrb_int pin, value;
   mrb_get_args(mrb, "ii", &pin, &value);
   pin=set_rpin(pin);
-
-  sprintf(buf, "echo %d > /sys/class/gpio/gpio%d/value", value, pin);
-  system(buf);
-
+  
+  if(value==1){ // high
+    gpio_set(pin);
+  } else { // low
+    gpio_clear(pin);
+  }
+	
   return mrb_nil_value();
 }
 

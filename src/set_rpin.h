@@ -16,7 +16,7 @@ int set_rpin(int pin)
 		case 6:
 			return 18;
 		case 7:
-			return 21;
+			return 27;
 		case 8:
 			return 22;
 		case 9:
