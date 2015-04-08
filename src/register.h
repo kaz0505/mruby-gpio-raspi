@@ -1,12 +1,23 @@
-//  register address
+// register address
 #define PERI_BASE     0x20000000
 #define GPIO_BASE     (PERI_BASE + 0x200000)
 #define BLOCK_SIZE    4096
 
+// gpio pinmode
+#define INPUT    0x0
+#define OUTPUT   0x1
+#define ALT0     0x4
+#define ALT1     0x5
+#define ALT2     0x6
+#define ALT3     0x7
+#define ALT4     0x3
+#define ALT5     0x2
+
 static volatile unsigned int *Gpio = NULL;
 void gpio_init ()
 {
-    int fd;
+	if (Gpio) return;
+	int fd;
     void *gpio_map;
     fd = open("/dev/mem", O_RDWR | O_SYNC);
     if (fd == -1) {
@@ -23,16 +34,6 @@ void gpio_init ()
     close(fd);
     Gpio = (unsigned int *) gpio_map;
 }
-
-// pinmode
-#define INPUT    0x0
-#define OUTPUT   0x1
-#define ALT0     0x4
-#define ALT1     0x5
-#define ALT2     0x6
-#define ALT3     0x7
-#define ALT4     0x3
-#define ALT5     0x2
 
 void gpio_configure (int pin, int mode)
 {

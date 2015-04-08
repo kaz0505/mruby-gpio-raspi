@@ -14,16 +14,15 @@ static mrb_value
 f_gpio_pinmode(mrb_state *mrb, mrb_value self)
 {
   gpio_init();
-  if (Gpio) return;
   char buf[100];
   mrb_int pin, dir;
   mrb_get_args(mrb, "ii", &pin, &dir);
   pin=set_rpin(pin);
   
   if( dir == 1 ){  // output
-    gpio_configure (pin, "OUTPUT");
+    gpio_configure (pin, OUTPUT);
   } else {         // input
-    gpio_configure (pin, "INPUT");
+    gpio_configure (pin, INPUT);
   }
 
   return mrb_nil_value();
