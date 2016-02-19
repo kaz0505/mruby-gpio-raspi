@@ -46,7 +46,7 @@ int i2cReadReg16(int fd, int reg)
     return i2c_smbus_read_word_data (fd, reg) ;
 }
 
-int i2cReadByte(int fd, int byte)
+int stdRead(int fd, int byte)
 {
     int i,ret;
     char buf[byte];

@@ -149,11 +149,11 @@ f_gpio_iread16(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-f_gpio_ireadbyte(mrb_state *mrb, mrb_value self)
+f_gpio_stdread(mrb_state *mrb, mrb_value self)
 {
   mrb_int fd, byte, ret;
   mrb_get_args(mrb, "ii", &fd, &byte);
-  ret = i2cReadByte(fd, byte);
+  ret = stdRead(fd, byte);
 
   return mrb_fixnum_value(ret);
 }
@@ -182,7 +182,7 @@ mrb_mruby_gpio_raspi_gem_init(mrb_state* mrb)
   mrb_define_module_function(mrb, c, "i2cRead", f_gpio_iread, MRB_ARGS_REQ(1));
   mrb_define_module_function(mrb, c, "i2cReadReg8", f_gpio_iread8, MRB_ARGS_REQ(2));
   mrb_define_module_function(mrb, c, "i2cReadReg16", f_gpio_iread16, MRB_ARGS_REQ(2));
-  mrb_define_module_function(mrb, c, "i2cReadByte", f_gpio_ireadbyte, MRB_ARGS_REQ(2));
+  mrb_define_module_function(mrb, c, "stdRead", f_gpio_stdread, MRB_ARGS_REQ(2));
 }
 
 void
