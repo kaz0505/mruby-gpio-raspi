@@ -21,6 +21,10 @@ f_gpio_pinmode(mrb_state *mrb, mrb_value self)
   mrb_int pin, dir;
   mrb_get_args(mrb, "ii", &pin, &dir);
   pin=set_rpin(pin);
+  if( pin == -1 ){
+	  printf("Error pinNo.\n");
+	  return mrb_fixnum_value(-1);
+  }
   
   if( dir == 1 ){  // output
     gpio_configure (pin, OUTPUT);
@@ -37,6 +41,10 @@ f_gpio_dwrite(mrb_state *mrb, mrb_value self)
   mrb_int pin, value;
   mrb_get_args(mrb, "ii", &pin, &value);
   pin=set_rpin(pin);
+  if( pin == -1 ){
+	  printf("Error pinNo.\n");
+	  return mrb_fixnum_value(-1);
+  }
   
   if(value==1){ // high
     gpio_set(pin);
@@ -55,10 +63,15 @@ f_gpio_dread(mrb_state *mrb, mrb_value self)
   FILE *fval;
   mrb_get_args(mrb, "i", &pin);
   pin=set_rpin(pin);
+  if( pin == -1 ){
+	  printf("Error pinNo.\n");
+	  return mrb_fixnum_value(-1);
+  }
 
   sprintf(buf,  "cat /sys/class/gpio/gpio%d/value", pin);
   fval=popen(buf, "r");
-  fgets(chval,sizeof(chval),fval);
+  if(fgets(chval,sizeof(chval),fval) == NULL)
+	  return mrb_fixnum_value(-1);
   pclose(fval);
 
   if(strcmp(chval,"0\n")==0){
