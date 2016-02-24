@@ -104,69 +104,29 @@ f_gpio_isetup(mrb_state *mrb, mrb_value self)
 static mrb_value
 f_gpio_iwrite(mrb_state *mrb, mrb_value self)
 {
-  mrb_int fd, data, ret;
-  mrb_get_args(mrb, "ii", &fd, &data);
-  ret = i2cWrite(fd, data);
+  mrb_int fd, reg, data, ret;
+  mrb_get_args(mrb, "iii", &fd, &reg, &data);
+  ret = i2cWrite(fd, reg, data);
 	
-  return mrb_fixnum_value(ret);
-}
-
-static mrb_value
-f_gpio_iwrite8(mrb_state *mrb, mrb_value self)
-{
-  mrb_int fd, reg, data, ret;
-  mrb_get_args(mrb, "iii", &fd, &reg, &data);
-  ret = i2cWriteReg8(fd, reg, data);
-
-  return mrb_fixnum_value(ret);
-}
-
-static mrb_value
-f_gpio_iwrite16(mrb_state *mrb, mrb_value self)
-{
-  mrb_int fd, reg, data, ret;
-  mrb_get_args(mrb, "iii", &fd, &reg, &data);
-  ret = i2cWriteReg16(fd, reg, data);
-
   return mrb_fixnum_value(ret);
 }
 
 static mrb_value
 f_gpio_iread(mrb_state *mrb, mrb_value self)
 {
-  mrb_int fd, ret;
-  mrb_get_args(mrb, "i", &fd);
-  ret = i2cRead(fd);
+  mrb_int fd, reg, ret;
+  mrb_get_args(mrb, "ii", &fd, &reg);
+  ret = i2cRead(fd, reg);
 	
-  return mrb_fixnum_value(ret);
-}
-
-static mrb_value
-f_gpio_iread8(mrb_state *mrb, mrb_value self)
-{
-  mrb_int fd, reg, ret;
-  mrb_get_args(mrb, "ii", &fd, &reg);
-  ret = i2cReadReg8(fd, reg);
-
-  return mrb_fixnum_value(ret);
-}
-
-static mrb_value
-f_gpio_iread16(mrb_state *mrb, mrb_value self)
-{
-  mrb_int fd, reg, ret;
-  mrb_get_args(mrb, "ii", &fd, &reg);
-  ret = i2cReadReg16(fd, reg);
-
   return mrb_fixnum_value(ret);
 }
 
 static mrb_value
 f_gpio_stdread(mrb_state *mrb, mrb_value self)
 {
-  mrb_int fd, byte, ret;
-  mrb_get_args(mrb, "ii", &fd, &byte);
-  ret = stdRead(fd, byte);
+  mrb_int fd, reg, ret;
+  mrb_get_args(mrb, "ii", &fd, &reg);
+  ret = stdRead(fd, reg);
 
   return mrb_fixnum_value(ret);
 }
@@ -189,12 +149,8 @@ mrb_mruby_gpio_raspi_gem_init(mrb_state* mrb)
 
   //i2c
   mrb_define_module_function(mrb, c, "i2cSetup", f_gpio_isetup, MRB_ARGS_REQ(1));
-  mrb_define_module_function(mrb, c, "i2cWrite", f_gpio_iwrite, MRB_ARGS_REQ(2));
-  mrb_define_module_function(mrb, c, "i2cWriteReg8", f_gpio_iwrite8, MRB_ARGS_REQ(3));
-  mrb_define_module_function(mrb, c, "i2cWriteReg16", f_gpio_iwrite16, MRB_ARGS_REQ(3));
-  mrb_define_module_function(mrb, c, "i2cRead", f_gpio_iread, MRB_ARGS_REQ(1));
-  mrb_define_module_function(mrb, c, "i2cReadReg8", f_gpio_iread8, MRB_ARGS_REQ(2));
-  mrb_define_module_function(mrb, c, "i2cReadReg16", f_gpio_iread16, MRB_ARGS_REQ(2));
+  mrb_define_module_function(mrb, c, "i2cWrite", f_gpio_iwrite, MRB_ARGS_REQ(3));
+  mrb_define_module_function(mrb, c, "i2cRead", f_gpio_iread, MRB_ARGS_REQ(2));
   mrb_define_module_function(mrb, c, "stdRead", f_gpio_stdread, MRB_ARGS_REQ(2));
 }
 
