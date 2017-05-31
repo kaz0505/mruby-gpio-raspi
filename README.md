@@ -1,4 +1,4 @@
 mruby-gpio-raspi
 ================
 
-mebgem for raspi gpio
+mrbgem for raspi gpio
